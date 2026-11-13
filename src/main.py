@@ -4,9 +4,16 @@ def hash_sha256(text):
 def hash_sha512(text):
     return hashlib.sha512(text.encode()).hexdigest()
 def hash_sha256_file(file_path):
+    sha256 = hashlib.sha256()
     with open(file_path, "rb") as file:
-        file_data = file.read()
-    return hashlib.sha256(file_data).hexdigest()
+        while True:
+            chunk = file.read(4096)
+
+            if not chunk:
+                break
+
+            sha256.update(chunk)
+    return sha256.hexdigest()
 if __name__ == "__main__":
     while True:
         menu = input(
