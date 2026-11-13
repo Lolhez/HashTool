@@ -3,6 +3,10 @@ def hash_sha256(text):
     return hashlib.sha256(text.encode()).hexdigest()
 def hash_sha512(text):
     return hashlib.sha512(text.encode()).hexdigest()
+def hash_sha256_file(file_path):
+    with open(file_path, "rb") as file:
+        file_data = file.read()
+    return hashlib.sha256(file_data).hexdigest()
 if __name__ == "__main__":
     while True:
         menu = input(
@@ -26,9 +30,7 @@ if __name__ == "__main__":
                     print("File path cannot be empty!")
                     continue
                 try:
-                    with open(file_path, "rb") as file:
-                        file_data = file.read()
-                    sha256_output_file = hashlib.sha256(file_data).hexdigest()
+                    sha256_output_file = hash_sha256_file(file_path)
                     print(f"SHA-256: {sha256_output_file}")
                 except FileNotFoundError:
                     print("File not found!")
