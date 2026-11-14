@@ -12,17 +12,21 @@ def hash_file(file_path, algorithm):
                 break
             hashfile_algorithm.update(chunk)
     return hashfile_algorithm.hexdigest()
+def verify_file_hash(file_path, expected_hash, algorithm):
+    calculated_hash = hash_file(file_path, algorithm)
+    return calculated_hash == expected_hash
+
 if __name__ == "__main__":
     while True:
         menu = input(
         """
         HashTool choose:
         ──────────
-        2-SHA-512
-        1-SHA-256
-        0-Exit     
+        3 - Verify File Hash
+        2 - SHA-512
+        1 - SHA-256
+        0 - Exit     
         ──────────
-        :
         """)
         if menu == "0":
             break
@@ -75,5 +79,38 @@ if __name__ == "__main__":
                 print(sha512_output)
             else:
                 print("Invalid choice!")
+        elif menu == "3":
+            menu256or512 = input("Choose algorithm: 1-SHA256 or 2-SHA512: ")
+
+            if menu256or512 == "1":
+                algorithm = "sha256"
+            elif menu256or512 == "2":
+                algorithm = "sha512"
+            else:
+                print("Invalid choice!")
+                continue
+
+            file_path = input("Enter file path: ")
+            if not file_path.strip():
+                print("File path cannot be empty!")
+                continue
+
+            expected_hash = input("Enter expected hash: ")
+            if not expected_hash.strip():
+                print("Expected hash cannot be empty!")
+                continue
+
+            try:
+                result = verify_file_hash(file_path, expected_hash.strip(), algorithm)
+
+                if result:
+                    print("Hash successfully verified!")
+                else:
+                    print("Hash failed verification!")
+
+            except FileNotFoundError:
+                print("File not found!")
+            except PermissionError:
+                print("Permission denied!")
         else:
             print("You entered the wrong thing")
