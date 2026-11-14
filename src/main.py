@@ -14,6 +14,17 @@ def hash_sha256_file(file_path):
 
             sha256.update(chunk)
     return sha256.hexdigest()
+def hash_sha512_file(file_path):
+    sha512 = hashlib.sha512()
+    with open(file_path, "rb") as file:
+        while True:
+            chunk = file.read(4096)
+
+            if not chunk:
+                break
+
+            sha512.update(chunk)
+    return sha512.hexdigest()
 if __name__ == "__main__":
     while True:
         menu = input(
@@ -30,8 +41,8 @@ if __name__ == "__main__":
             break
         #SHA-256
         elif menu == "1":
-            menutf = input("What do you want to hash: 1-File or 2-Text: ")
-            if menutf == "1":
+            menutf256 = input("What do you want to hash: 1-File or 2-Text: ")
+            if menutf256 == "1":
                 file_path = input("Enter file path:")
                 if not file_path.strip():
                     print("File path cannot be empty!")
@@ -44,7 +55,7 @@ if __name__ == "__main__":
                 except PermissionError:
                     print("Permission denied!")
 
-            elif menutf == "2":
+            elif menutf256 == "2":
                 sha256_input = input("Enter text:")
                 if not sha256_input.strip():
                     print("Text cannot be empty!")
@@ -55,11 +66,27 @@ if __name__ == "__main__":
                 print("Invalid choice!")
         #SHA-512
         elif menu == "2":
-            sha512_input = input("Enter text:")
-            if not sha512_input.strip():
-                print("Text cannot be empty!")
-                continue
-            sha512_output = hash_sha512(sha512_input)
-            print(sha512_output)
+            menutf512 = input("What do you want to hash: 1-File or 2-Text: ")
+            if menutf512 == "1":
+                file_path = input("Enter file path:")
+                if not file_path.strip():
+                    print("File path cannot be empty!")
+                    continue
+                try:
+                    sha512_output_file = hash_sha512_file(file_path)
+                    print(f"SHA-512: {sha512_output_file}")
+                except FileNotFoundError:
+                    print("File not found!")
+                except PermissionError:
+                    print("Permission denied!")
+            elif menutf512 == "2":
+                sha512_input = input("Enter text:")
+                if not sha512_input.strip():
+                    print("Text cannot be empty!")
+                    continue
+                sha512_output = hash_sha512(sha512_input)
+                print(sha512_output)
+            else:
+                print("Invalid choice!")
         else:
             print("You entered the wrong thing")
