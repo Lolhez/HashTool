@@ -1,30 +1,17 @@
 import hashlib
-def hash_sha256(text):
-    return hashlib.sha256(text.encode()).hexdigest()
-def hash_sha512(text):
-    return hashlib.sha512(text.encode()).hexdigest()
-def hash_sha256_file(file_path):
-    sha256 = hashlib.sha256()
+def hash_text(text, algorithm):
+    hash_algorithm = hashlib.new(algorithm)
+    hash_algorithm.update(text.encode())
+    return hash_algorithm.hexdigest()
+def hash_file(file_path, algorithm):
+    hashfile_algorithm = hashlib.new(algorithm)
     with open(file_path, "rb") as file:
         while True:
             chunk = file.read(4096)
-
             if not chunk:
                 break
-
-            sha256.update(chunk)
-    return sha256.hexdigest()
-def hash_sha512_file(file_path):
-    sha512 = hashlib.sha512()
-    with open(file_path, "rb") as file:
-        while True:
-            chunk = file.read(4096)
-
-            if not chunk:
-                break
-
-            sha512.update(chunk)
-    return sha512.hexdigest()
+            hashfile_algorithm.update(chunk)
+    return hashfile_algorithm.hexdigest()
 if __name__ == "__main__":
     while True:
         menu = input(
@@ -48,7 +35,7 @@ if __name__ == "__main__":
                     print("File path cannot be empty!")
                     continue
                 try:
-                    sha256_output_file = hash_sha256_file(file_path)
+                    sha256_output_file = hash_file(file_path,"sha256")
                     print(f"SHA-256: {sha256_output_file}")
                 except FileNotFoundError:
                     print("File not found!")
@@ -60,7 +47,7 @@ if __name__ == "__main__":
                 if not sha256_input.strip():
                     print("Text cannot be empty!")
                     continue
-                sha256_output = hash_sha256(sha256_input)
+                sha256_output = hash_text(sha256_input,"sha256")
                 print(sha256_output)
             else:
                 print("Invalid choice!")
@@ -73,7 +60,7 @@ if __name__ == "__main__":
                     print("File path cannot be empty!")
                     continue
                 try:
-                    sha512_output_file = hash_sha512_file(file_path)
+                    sha512_output_file = hash_file(file_path,"sha512")
                     print(f"SHA-512: {sha512_output_file}")
                 except FileNotFoundError:
                     print("File not found!")
@@ -84,7 +71,7 @@ if __name__ == "__main__":
                 if not sha512_input.strip():
                     print("Text cannot be empty!")
                     continue
-                sha512_output = hash_sha512(sha512_input)
+                sha512_output = hash_text(sha512_input,"sha512")
                 print(sha512_output)
             else:
                 print("Invalid choice!")
